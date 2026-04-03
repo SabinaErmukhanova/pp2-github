@@ -1,34 +1,25 @@
 # Import required libraries
-import psycopg2              # PostgreSQL connection
-from connect import get_connection  # our custom connection function
-import csv                  # used to read CSV file
+import psycopg2
+from connect import get_connection
+import csv
 
 
 # Function to create table in database
 def create_table():
-    # Get connection to database
     conn = get_connection()
-
-    # Create cursor → object that executes SQL commands
     cur = conn.cursor()
 
-    # SQL query:
-    # CREATE TABLE IF NOT EXISTS → prevents error if table already exists
+    # Create table if not exists
     cur.execute("""
         CREATE TABLE IF NOT EXISTS contacts (
-            id SERIAL PRIMARY KEY,   
-            name VARCHAR(100),       
-            phone VARCHAR(20)        
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(100),
+            phone VARCHAR(20)
         )
     """)
 
-    # commit() → saves changes in database
     conn.commit()
-
-    # Close cursor → free resources
     cur.close()
-
-    # Close connection
     conn.close()
 
 
@@ -37,23 +28,18 @@ def insert_from_csv():
     conn = get_connection()
     cur = conn.cursor()
 
-    # Open file in read mode
-    # with → automatically closes file after block ends
     with open("contacts.csv", "r") as file:
-
-        # csv.reader → reads file line by line
         reader = csv.reader(file)
 
-        # Loop through each row in CSV
         for row in reader:
-            # Each row contains 2 values: name, phone
+            if len(row) != 2:
+                continue  # skip incorrect rows
+
             name, phone = row
 
-            # Execute SQL INSERT query
-            # %s → placeholder for safe insertion (prevents SQL injection)
             cur.execute(
                 "INSERT INTO contacts (name, phone) VALUES (%s, %s)",
-                (name, phone)   # values passed as tuple
+                (name, phone)
             )
 
     conn.commit()
@@ -61,16 +47,14 @@ def insert_from_csv():
     conn.close()
 
 
-# Function to insert data manually from user input
+# Function to insert data manually
 def insert_from_console():
     conn = get_connection()
     cur = conn.cursor()
 
-    # input() → read data from user
     name = input("Enter name: ")
     phone = input("Enter phone: ")
 
-    # Insert into table
     cur.execute(
         "INSERT INTO contacts (name, phone) VALUES (%s, %s)",
         (name, phone)
@@ -81,19 +65,14 @@ def insert_from_console():
     conn.close()
 
 
-# Function to update existing contact
+# Function to update contact (old way)
 def update_contact():
     conn = get_connection()
     cur = conn.cursor()
 
-    # Ask user which contact to update
     name = input("Enter name to update: ")
-
-    # Ask for new phone number
     new_phone = input("Enter new phone: ")
 
-    # SQL UPDATE query
-    # Updates phone WHERE name matches
     cur.execute(
         "UPDATE contacts SET phone = %s WHERE name = %s",
         (new_phone, name)
@@ -104,35 +83,15 @@ def update_contact():
     conn.close()
 
 
-# Function to search contacts with filter
+# Search using PostgreSQL FUNCTION
 def query_contacts():
     conn = get_connection()
     cur = conn.cursor()
 
-    print("1. Search by name")
-    print("2. Search by phone")
+    pattern = input("Enter search (name or phone): ")
 
-    choice = input("Choose: ")
-
-    if choice == "1":
-        name = input("Enter name: ")
-
-        cur.execute(
-            "SELECT * FROM contacts WHERE name ILIKE %s",
-            ("%" + name + "%",)
-        )
-
-    elif choice == "2":
-        phone = input("Enter phone: ")
-
-        cur.execute(
-            "SELECT * FROM contacts WHERE phone LIKE %s",
-            ("%" + phone + "%",)
-        )
-
-    else:
-        print("Invalid choice")
-        return
+    # Call SQL function
+    cur.execute("SELECT * FROM search_contacts(%s)", (pattern,))
 
     rows = cur.fetchall()
 
@@ -146,15 +105,85 @@ def query_contacts():
     conn.close()
 
 
-# Function to delete contact
+#  Pagination using SQL FUNCTION
+def paginate_contacts():
+    conn = get_connection()
+    cur = conn.cursor()
+
+    limit = int(input("Enter limit: "))
+    offset = int(input("Enter offset: "))
+
+    cur.execute(
+        "SELECT * FROM get_contacts_paginated(%s, %s)",
+        (limit, offset)
+    )
+
+    rows = cur.fetchall()
+
+    for row in rows:
+        print("ID:", row[0], "| Name:", row[1], "| Phone:", row[2])
+
+    cur.close()
+    conn.close()
+
+
+#  Insert or Update using PROCEDURE
+def insert_or_update_proc():
+    conn = get_connection()
+    cur = conn.cursor()
+
+    name = input("Enter name: ")
+    phone = input("Enter phone: ")
+
+    cur.execute("CALL insert_or_update_user(%s, %s)", (name, phone))
+
+    conn.commit()
+    conn.close()
+
+    print("Inserted or updated!")
+
+
+#  Bulk insert using PROCEDURE
+def insert_many():
+    conn = get_connection()
+    cur = conn.cursor()
+
+    names = input("Enter names (comma separated): ").split(',')
+    phones = input("Enter phones (comma separated): ").split(',')
+
+    cur.execute(
+        "CALL insert_many_users(%s, %s)",
+        (names, phones)
+    )
+
+    conn.commit()
+    conn.close()
+
+    print("Bulk insert done!")
+
+
+#  Delete using PROCEDURE
+def delete_user_proc():
+    conn = get_connection()
+    cur = conn.cursor()
+
+    value = input("Enter name or phone to delete: ")
+
+    cur.execute("CALL delete_user(%s)", (value,))
+
+    conn.commit()
+    conn.close()
+
+    print("Deleted!")
+
+
+# OLD delete
 def delete_contact():
     conn = get_connection()
     cur = conn.cursor()
 
-    # Ask user which contact to delete
     name = input("Enter name to delete: ")
 
-    # SQL DELETE query
     cur.execute(
         "DELETE FROM contacts WHERE name = %s",
         (name,)
@@ -164,25 +193,47 @@ def delete_contact():
     cur.close()
     conn.close()
 
+# Function to show ALL contacts (table view)
+def show_all_contacts():
+    conn = get_connection()
+    cur = conn.cursor()
 
-# Main program (menu system)
+    # Get all data from table
+    cur.execute("SELECT * FROM contacts ORDER BY id")
+
+    rows = cur.fetchall()
+
+    print("\n=== CONTACTS TABLE ===")
+    print("ID | Name       | Phone")
+    print("----------------------------")
+
+    # Print nicely
+    for row in rows:
+        print(f"{row[0]}  | {row[1]:10} | {row[2]}")
+
+    cur.close()
+    conn.close()
+
+
+# Main program
 def main():
-    # Ensure table exists before using it
     create_table()
 
-    # Infinite loop → program runs until user exits
     while True:
         print("\n1. Insert CSV")
         print("2. Insert console")
-        print("3. Update")
-        print("4. Query")
-        print("5. Delete")
+        print("3. Update (old)")
+        print("4. Search (function)")
+        print("5. Delete (old)")
         print("6. Exit")
+        print("7. Pagination")
+        print("8. Insert/Update (procedure)")
+        print("9. Bulk insert")
+        print("10. Delete (procedure)")
+        print("11. Show all contacts")
 
-        # Get user choice
         choice = input("Choose: ")
 
-        # Call corresponding function
         if choice == "1":
             insert_from_csv()
         elif choice == "2":
@@ -194,9 +245,18 @@ def main():
         elif choice == "5":
             delete_contact()
         elif choice == "6":
-            # Break loop → exit program
             break
+        elif choice == "7":
+            paginate_contacts()
+        elif choice == "8":
+            insert_or_update_proc()
+        elif choice == "9":
+            insert_many()
+        elif choice == "10":
+            delete_user_proc()
+        elif choice == "11":
+            show_all_contacts()
 
 
-# Run main function (entry point)
+# Run program
 main()
