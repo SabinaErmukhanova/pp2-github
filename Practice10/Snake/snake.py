@@ -6,36 +6,34 @@ import sys
 pygame.init()
 pygame.mixer.init()
 
-#  SETTINGS 
+# WINDOW SETTINGS
 WIDTH = 600
 HEIGHT = 400
 CELL = 20
-SPEED = 5
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Snake")
 
-#  SOUND 
+# SOUND
 pygame.mixer.music.load("sounds/music.mp3")
 pygame.mixer.music.set_volume(0.2)
 pygame.mixer.music.play(-1)
 
 eat_sound = pygame.mixer.Sound("sounds/gc.wav")
-eat_sound.set_volume(1.0)
 
-# COLORS 
+# COLORS
 SNAKE_COLOR = (170, 200, 50)
 FOOD_COLOR = (255, 150, 0)
 
-#  SCORE 
+# GAME VARIABLES
 score = 0
 level = 1
+speed = 2  # 🔥 начальная скорость (как просил преподаватель)
 
 font = pygame.font.SysFont("Verdana", 20)
-
 clock = pygame.time.Clock()
 
-#  GAME OVER FUNCTION 
+# GAME OVER
 def game_over():
     screen.fill((255, 0, 0))
 
@@ -56,11 +54,11 @@ def game_over():
     pygame.quit()
     sys.exit()
 
-#  SNAKE 
-snake = [[100,100],[130,100],[160,100]]
+# SNAKE
+snake = [[100,100],[120,100],[140,100]]
 direction = "RIGHT"
 
-#  FOOD
+# FOOD
 def spawn_food():
     while True:
         food = [
@@ -72,7 +70,7 @@ def spawn_food():
 
 food = spawn_food()
 
-#  GAME LOOP 
+# GAME LOOP
 while True:
 
     for event in pygame.event.get():
@@ -80,18 +78,17 @@ while True:
             pygame.quit()
             sys.exit()
 
-    keys = pygame.key.get_pressed()
+        if event.type == KEYDOWN:
+            if event.key == K_UP and direction != "DOWN":
+                direction = "UP"
+            elif event.key == K_DOWN and direction != "UP":
+                direction = "DOWN"
+            elif event.key == K_LEFT and direction != "RIGHT":
+                direction = "LEFT"
+            elif event.key == K_RIGHT and direction != "LEFT":
+                direction = "RIGHT"
 
-    if keys[K_UP] and direction != "DOWN":
-        direction = "UP"
-    elif keys[K_DOWN] and direction != "UP":
-        direction = "DOWN"
-    elif keys[K_LEFT] and direction != "RIGHT":
-        direction = "LEFT"
-    elif keys[K_RIGHT] and direction != "LEFT":
-        direction = "RIGHT"
-
-    #  MOVE 
+    # MOVE
     head = snake[-1].copy()
 
     if direction == "RIGHT":
@@ -103,42 +100,40 @@ while True:
     elif direction == "DOWN":
         head[1] += CELL
 
-    #  COLLISION (WALL) 
+    # WALL COLLISION
     if head[0] < 0 or head[0] >= WIDTH or head[1] < 0 or head[1] >= HEIGHT:
         game_over()
 
-    #  COLLISION (SELF) 
+    # SELF COLLISION
     if head in snake:
         game_over()
 
     snake.append(head)
 
-    #  EAT 
+    # EAT FOOD
     if head == food:
         eat_sound.play()
         score += 1
         food = spawn_food()
 
-        # LEVEL UP
-        if score % 4 == 0:
+        # 🔥 LEVEL UP (каждые 2 яблока)
+        if score % 2 == 0:
             level += 1
-            SPEED += 1
+            speed += 1   # 🔥 вот главное — скорость увеличивается на 1
+
     else:
         snake.pop(0)
 
-    #  DRAW 
+    # DRAW
     screen.fill((255,255,255))
 
-    # snake
     for segment in snake:
         pygame.draw.rect(screen, SNAKE_COLOR,
                          pygame.Rect(segment[0], segment[1], CELL, CELL))
 
-    # food
     pygame.draw.rect(screen, FOOD_COLOR,
                      pygame.Rect(food[0], food[1], CELL, CELL))
 
-    # UI
     score_text = font.render(f"Score: {score}", True, (0,0,0))
     level_text = font.render(f"Level: {level}", True, (0,0,0))
 
@@ -146,4 +141,6 @@ while True:
     screen.blit(level_text, (10, 35))
 
     pygame.display.update()
-    clock.tick(SPEED)
+
+    # 🔥 скорость змеи зависит от level
+    clock.tick(speed)
