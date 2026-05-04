@@ -1,8 +1,20 @@
 [
     {
+        "name": "rr",
+        "score": 346,
+        "distance": 267,
+        "coins": 28
+    },
+    {
         "name": "Sabina",
         "score": 230,
         "distance": 239,
+        "coins": 18
+    },
+    {
+        "name": "fd",
+        "score": 225,
+        "distance": 137,
         "coins": 18
     },
     {
@@ -18,10 +30,22 @@
         "coins": 8
     },
     {
+        "name": "sss",
+        "score": 86,
+        "distance": 130,
+        "coins": 5
+    },
+    {
         "name": "gg",
         "score": 67,
         "distance": 269,
         "coins": 0
+    },
+    {
+        "name": "hhh",
+        "score": 29,
+        "distance": 31,
+        "coins": 2
     },
     {
         "name": "sabina",
@@ -33,30 +57,6 @@
         "name": "adina",
         "score": 18,
         "distance": 75,
-        "coins": 0
-    },
-    {
-        "name": "lily",
-        "score": 18,
-        "distance": 75,
-        "coins": 0
-    },
-    {
-        "name": "dd",
-        "score": 18,
-        "distance": 72,
-        "coins": 0
-    },
-    {
-        "name": "ver",
-        "score": 13.179999999999808,
-        "distance": 52.71999999999923,
-        "coins": 0
-    },
-    {
-        "name": "salta",
-        "score": 12.779999999999816,
-        "distance": 51.119999999999266,
         "coins": 0
     }
 ]

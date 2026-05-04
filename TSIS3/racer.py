@@ -124,6 +124,7 @@ def run_game(screen, username, settings):  # main game function, called from mai
 
             img_name = random.choice(["enemy1.png", "enemy2.png", "enemy3.png"])  # randomly selects enemy image
             img = pygame.image.load("photo/" + img_name).convert_alpha()  # loads selected enemy image
+            img = pygame.transform.rotate(img, 180)
 
             rect = img.get_bounding_rect()  # finds visible part of enemy image
             img = img.subsurface(rect).copy()  # crops transparent borders from enemy image
