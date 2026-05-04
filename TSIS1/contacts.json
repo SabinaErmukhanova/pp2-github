@@ -1,0 +1,162 @@
+[
+    {
+        "name": "Alice Johnson",
+        "email": "alice@gmail.com",
+        "birthday": "2000-05-10",
+        "group": "Friend",
+        "phone": "777111111",
+        "type": "mobile"
+    },
+    {
+        "name": "Bob Smith",
+        "email": "bob@work.com",
+        "birthday": "1995-03-22",
+        "group": "Work",
+        "phone": "8700555001",
+        "type": "work"
+    },
+    {
+        "name": "Charlie Brown",
+        "email": "charlie@mail.com",
+        "birthday": "2001-11-15",
+        "group": "Family",
+        "phone": "123456789",
+        "type": "home"
+    },
+    {
+        "name": "Diana Prince",
+        "email": "diana@gmail.com",
+        "birthday": "1999-07-08",
+        "group": "Friend",
+        "phone": "777222222",
+        "type": "mobile"
+    },
+    {
+        "name": "Ethan Hunt",
+        "email": "ethan@mission.com",
+        "birthday": "1988-12-01",
+        "group": "Work",
+        "phone": "8700555002",
+        "type": "work"
+    },
+    {
+        "name": "Fiona Green",
+        "email": "fiona@mail.com",
+        "birthday": "2002-04-19",
+        "group": "Other",
+        "phone": "777333333",
+        "type": "mobile"
+    },
+    {
+        "name": "George King",
+        "email": "george@gmail.com",
+        "birthday": "1997-09-30",
+        "group": "Family",
+        "phone": "8700555003",
+        "type": "home"
+    },
+    {
+        "name": "Hannah Lee",
+        "email": "hannah@company.com",
+        "birthday": "1996-02-14",
+        "group": "Work",
+        "phone": "777444444",
+        "type": "work"
+    },
+    {
+        "name": "Ivan Petrov",
+        "email": "ivan@mail.com",
+        "birthday": "2000-01-01",
+        "group": "Friend",
+        "phone": "8700555004",
+        "type": "mobile"
+    },
+    {
+        "name": "Julia White",
+        "email": "julia@gmail.com",
+        "birthday": "1998-06-25",
+        "group": "Other",
+        "phone": "777555555",
+        "type": "home"
+    },
+    {
+        "name": "Alice Johnson",
+        "email": "alice@gmail.com",
+        "birthday": "2000-05-10",
+        "group": "Friend",
+        "phone": "777111111",
+        "type": "mobile"
+    },
+    {
+        "name": "Bob Smith",
+        "email": "bob@work.com",
+        "birthday": "1995-03-22",
+        "group": "Work",
+        "phone": "8700555001",
+        "type": "work"
+    },
+    {
+        "name": "Charlie Brown",
+        "email": "charlie@mail.com",
+        "birthday": "2001-11-15",
+        "group": "Family",
+        "phone": "123456789",
+        "type": "home"
+    },
+    {
+        "name": "Diana Prince",
+        "email": "diana@gmail.com",
+        "birthday": "1999-07-08",
+        "group": "Friend",
+        "phone": "777222222",
+        "type": "mobile"
+    },
+    {
+        "name": "Ethan Hunt",
+        "email": "ethan@mission.com",
+        "birthday": "1988-12-01",
+        "group": "Work",
+        "phone": "8700555002",
+        "type": "work"
+    },
+    {
+        "name": "Fiona Green",
+        "email": "fiona@mail.com",
+        "birthday": "2002-04-19",
+        "group": "Other",
+        "phone": "777333333",
+        "type": "mobile"
+    },
+    {
+        "name": "George King",
+        "email": "george@gmail.com",
+        "birthday": "1997-09-30",
+        "group": "Family",
+        "phone": "8700555003",
+        "type": "home"
+    },
+    {
+        "name": "Hannah Lee",
+        "email": "hannah@company.com",
+        "birthday": "1996-02-14",
+        "group": "Work",
+        "phone": "777444444",
+        "type": "work"
+    },
+    {
+        "name": "Ivan Petrov",
+        "email": "ivan@mail.com",
+        "birthday": "2000-01-01",
+        "group": "Friend",
+        "phone": "8700555004",
+        "type": "mobile"
+    },
+    {
+        "name": "Julia White",
+        "email": "julia@gmail.com",
+        "birthday": "1998-06-25",
+        "group": "Other",
+        "phone": "777555555",
+        "type": "home"
+    }
+]
